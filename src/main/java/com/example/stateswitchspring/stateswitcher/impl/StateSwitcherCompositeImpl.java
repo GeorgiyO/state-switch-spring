@@ -20,9 +20,11 @@ public class StateSwitcherCompositeImpl implements StateSwitcherComposite {
 
   public StateSwitcherCompositeImpl(List<StateSwitcher> switchers) {
     switchers.forEach(sw -> {
-      this.switchers.putIfAbsent(sw.from(), new HashMap<>());
-      var map = this.switchers.get(sw.from());
-      map.put(sw.to(), sw);
+      var from = sw.getClass().getAnnotation(StateSwitcher.From.class).value();
+      var to = sw.getClass().getAnnotation(StateSwitcher.To.class).value();
+      this.switchers.putIfAbsent(from, new HashMap<>());
+      var map = this.switchers.get(from);
+      map.put(to, sw);
     });
   }
 
